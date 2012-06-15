@@ -41,7 +41,7 @@ vows.describe('node-http-proxy/http-proxy/' + testName).addBatch({
     "with no latency" : {
       "when an inbound message is sent from a WebSocket client": {
         topic: function () {
-          var that = this
+          var that = this,
               headers = {};
 
           runner.webSocketTest({

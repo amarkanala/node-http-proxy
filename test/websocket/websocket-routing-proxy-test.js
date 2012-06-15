@@ -52,7 +52,7 @@ vows.describe('node-http-proxy/routing-proxy/' + testName).addBatch({
     "using proxy table with no latency": {
       "when an inbound message is sent from a WebSocket client": {
         topic: function () {
-          var that = this
+          var that = this,
               headers = {};
 
           runner.webSocketTestWithTable({
@@ -60,7 +60,7 @@ vows.describe('node-http-proxy/routing-proxy/' + testName).addBatch({
             host: 'localhost',
             wsprotocol: options.source.protocols.ws,
             protocol: options.source.protocols.http,
-            router: { 'localhost' : 'localhost:8230' }, 
+            router: { 'localhost' : 'localhost:8230' },
             ports: {
               target: 8230,
               proxy: 8231

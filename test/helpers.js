@@ -25,7 +25,7 @@ var loadHttps = exports.loadHttps = function () {
   };
 };
 
-var parseProtocol = exports.parseProtocol = function () {  
+var parseProtocol = exports.parseProtocol = function () {
   function setupProtocol (secure) {
     return {
       secure: secure,
@@ -33,14 +33,14 @@ var parseProtocol = exports.parseProtocol = function () {
         http: secure ? 'https' : 'http',
         ws: secure ? 'wss' : 'ws'
       }
-    }
+    };
   }
   
   return {
     source: setupProtocol(argv.source === 'secure'),
     target: setupProtocol(argv.target === 'secure')
   };
-}
+};
 
 var TestRunner = exports.TestRunner = function (options) {
   options          = options || {};
@@ -58,7 +58,7 @@ var TestRunner = exports.TestRunner = function (options) {
 };
 
 TestRunner.prototype.assertProxied = function (host, proxyPort, port, requestPath, targetPath, createProxy) {
-  if (!targetPath) targetPath = "";
+  if (!targetPath) { targetPath = ""; }
   
   var self = this,
       output = "hello " + host + targetPath,
@@ -66,7 +66,7 @@ TestRunner.prototype.assertProxied = function (host, proxyPort, port, requestPat
 
   var test = {
     topic: function () {
-      var that = this, 
+      var that = this,
           options;
           
       options = {
@@ -77,7 +77,7 @@ TestRunner.prototype.assertProxied = function (host, proxyPort, port, requestPat
         }
       };
       
-      if (requestPath) options.uri += requestPath;
+      if (requestPath) { options.uri += requestPath; }
 
       function startTest () {
         if (port) {
@@ -180,17 +180,17 @@ TestRunner.prototype.webSocketTest = function (options) {
     }
 
     self.startProxyServer(
-      options.ports.proxy, 
-      options.ports.target, 
-      options.host, 
+      options.ports.proxy,
+      options.ports.target,
+      options.host,
       function (err, proxy) {
         if (options.onServer) { options.onServer(proxy) }
         
         //
         // Setup the web socket against our proxy
         //
-        var uri = options.wsprotocol + '://' + options.host + ':' + options.ports.proxy;
-        var ws = new WebSocket(uri, {
+        var uri = options.wsprotocol + '://' + options.host + ':' + options.ports.proxy,
+            ws = new WebSocket(uri, {
           origin: options.wsprotocol + '://' + options.host
         });
         
@@ -217,15 +217,15 @@ TestRunner.prototype.webSocketTestWithTable = function (options) {
 
     self.startProxyServerWithTable(
       options.ports.proxy,
-      { router: options.router }, 
+      { router: options.router },
       function (err, proxy) {
         if (options.onServer) { options.onServer(proxy) }
         
         //
         // Setup the web socket against our proxy
         //
-        var uri = options.wsprotocol + '://' + options.host + ':' + options.ports.proxy;
-        var ws = new WebSocket(uri, {
+        var uri = options.wsprotocol + '://' + options.host + ':' + options.ports.proxy,
+            ws = new WebSocket(uri, {
           origin: options.protocol + '://' + options.host
         });
         
@@ -260,8 +260,8 @@ TestRunner.prototype.webSocketIOTest = function (options) {
         //
         // Setup the web socket against our proxy
         //
-        var uri = options.wsprotocol + '://' + options.host + ':' + options.ports.proxy;
-        var ws = SocketIoClient.connect(uri);
+        var uri = options.wsprotocol + '://' + options.host + ':' + options.ports.proxy,
+            ws = SocketIoClient.connect(uri);
 
         if (options.onWsupgrade) { ws.on('wsupgrade', options.onWsupgrade) }
         if (options.onMessage) { ws.on('message', options.onMessage) }
@@ -291,7 +291,7 @@ TestRunner.prototype.startLatentProxyServer = function (port, targetPort, host, 
   //
   // Initialize the nodeProxy and start proxying the request
   //
-  var that = this, 
+  var that = this,
       proxyServer;
     
   proxyServer = httpProxy.createServer(host, targetPort, function (req, res, proxy) {
@@ -312,7 +312,7 @@ TestRunner.prototype.startLatentProxyServer = function (port, targetPort, host, 
 // Creates the reverse proxy server with a ProxyTable
 //
 TestRunner.prototype.startProxyServerWithTable = function (port, options, callback) {
-  var that = this, 
+  var that = this,
       proxyServer = httpProxy.createServer(merge({}, options, this.getOptions()));
 
   proxyServer.listen(port, function () {
@@ -331,17 +331,16 @@ TestRunner.prototype.startProxyServerWithTableAndLatency = function (port, laten
   // Initialize the nodeProxy and start proxying the request
   //
   var that = this,
-      proxy = new httpProxy.RoutingProxy(merge({}, options, this.getOptions())),
-      proxyServer;
-
-  var handler = function (req, res) {
-    var buffer = httpProxy.buffer(req);
-    setTimeout(function () {
-      proxy.proxyRequest(req, res, {
-        buffer: buffer
-      });
-    }, latency);
-  };
+    proxy = new httpProxy.RoutingProxy(merge({}, options, this.getOptions())),
+    proxyServer,
+    handler = function (req, res) {
+      var buffer = httpProxy.buffer(req);
+      setTimeout(function () {
+        proxy.proxyRequest(req, res, {
+          buffer: buffer
+        });
+      }, latency);
+    };
 
   proxyServer = this.source.https
     ? https.createServer(this.source.https, handler)
@@ -359,7 +358,7 @@ TestRunner.prototype.startProxyServerWithTableAndLatency = function (port, laten
 // Creates proxy server forwarding to the specified options
 //
 TestRunner.prototype.startProxyServerWithForwarding = function (port, targetPort, host, options, callback) {
-  var that = this, 
+  var that = this,
       proxyServer = httpProxy.createServer(targetPort, host, merge({}, options, this.getOptions()));
   
   proxyServer.listen(port, function () {
@@ -372,8 +371,8 @@ TestRunner.prototype.startProxyServerWithForwarding = function (port, targetPort
 // Creates the 'hellonode' server
 //
 TestRunner.prototype.startTargetServer = function (port, output, callback) {
-  var that = this, 
-      targetServer, 
+  var that = this,
+      targetServer,
       handler;
 
   handler = function (req, res) {
@@ -404,7 +403,7 @@ TestRunner.prototype.closeServers = function () {
 };
 
 //
-// Creates a new instance of the options to 
+// Creates a new instance of the options to
 // pass to `httpProxy.createServer()`
 //
 TestRunner.prototype.getOptions = function () {
